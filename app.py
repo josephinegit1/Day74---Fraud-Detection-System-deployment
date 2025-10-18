@@ -3,6 +3,7 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 import joblib
 import numpy as np
+from typing import List
 
 app = FastAPI()
 model = joblib.load("fraud_detection_model.pkl")
@@ -10,10 +11,8 @@ model = joblib.load("fraud_detection_model.pkl")
 class Transaction(BaseModel):
     features: list  # [value1, value2, ..., valueN]
 
-@app.get("/")
-def read_root():
-    return {"message": "Fraud Detection API is running"}
-
+class InputData(BaseModel):
+    features: List[float]
 
 @app.post("/predict")
 def predict(transaction: Transaction):
